@@ -9,6 +9,7 @@ export class QuizPagesComponent {
 
   public namePlayer:string = '';
   public gameStar:Boolean = false;
+  templateValue:boolean= true;
 
 
   starGame(name:string) {
@@ -18,7 +19,7 @@ export class QuizPagesComponent {
         return console.log('campo no valido');
      }
 
-     return this.gameStar = true, this.namePlayer=name
+     return this.gameStar = true, this.namePlayer=name, this.templateValue = false
 
   }
 

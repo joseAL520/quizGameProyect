@@ -1,1 +1,13 @@
 <p>form works!</p>
+<section *ngFor="let item of category">
+    <button (click)="takeQuestion()">{{item.nombre}}</button>
+</section>
+<div>
+    <h2>{{question}}</h2>
+    <section *ngFor="let item of options">
+        <input type="radio" name="option" value="{{item[0]}}"  (change)="isValidationQuestion(item[0])"> {{item[1]}}
+    </section>
+</div>
+
+
+
