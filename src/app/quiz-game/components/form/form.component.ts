@@ -10,18 +10,23 @@ import { Categoria, Quiz } from '../../interfaces/quiz.interfecas';
 
 
 export class FormComponent implements OnInit {
- 
+
   public quizList!:Quiz;
   public currenCuestionIndex:number = 0;
   public quizTupla!: [id: string, value: {}]; 
   
   public question:string = '';
-
-
   public options:any[]=[]
+  public answers:string = '';
+  public answersCorrect!:boolean
+
+  public state:boolean = true;
+  public point:number = 0;
+
 
   public category:Categoria[] = [
     { id: 1, nombre: 'Electrónica' },
+    { id: 2, nombre: 'Gamer' },
   ]
 
    
@@ -38,10 +43,8 @@ export class FormComponent implements OnInit {
   }
     
   runningListQuestion(){
-    
     const currentIndex = Object.entries(this.quizList).length
-    const data = Object.entries(this.quizList)
-   
+    const data = Object.entries(this.quizList);
     for (let index = 0; index <= currentIndex; index++) {
       this.quizTupla = data[this.currenCuestionIndex];
       return this.quizTupla
@@ -51,13 +54,11 @@ export class FormComponent implements OnInit {
 
   takeQuestion(){
     this.runningListQuestion()
-
+    this.state=false
     const question = (this.quizTupla[1] as {pregunta:string} ).pregunta
     this.question = question;
-  
     this.takeOptions();
     return    
-      
   }
 
   takeOptions(){
@@ -69,18 +70,67 @@ export class FormComponent implements OnInit {
         this.options.push(arrayOptions[index]) ;
       }
     }
-    console.log(this.options)
+    this.takeAnswers()
     return 
   }
 
   //tomar la respuesta correcta
+  takeAnswers(){
+    const answers = (this.quizTupla[1] as {respuesta_correcta:string} ).respuesta_correcta
+    this.answers = answers;
+    return    
+  }
+
 
   isValidationQuestion(option:string){
-    console.log(option)
+    this.answersCorrect =  (option === this.answers);
+    return this.answersCorrect
+  }
+
+  isValidationCorrect(){
+    const currentIndex = Object.entries(this.quizList).length
+    this.currenCuestionIndex = this.currenCuestionIndex  + 1;
+
+    if(currentIndex > this.currenCuestionIndex){
+      console.log('entra',this.currenCuestionIndex)
+      this.question= '';
+      this.options  = []=[]
+      this.answers = '';
+      this.answersCorrect = false
+      this.point = this.point + 1
+      this.runningListQuestion()
+      this.takeQuestion()  
+
+    }else{
+      this.point = this.point + 1
+      this.state = true;
+    }
+
+  }
+
+  isValidationInCorrect(){
+      alert('perdistes')
+      this.currenCuestionIndex = 0;
+      this.question= '';
+      this.options  = []=[]
+      this.answers = '';
+      this.answersCorrect = false
+      this.point = 0;
+      this.runningListQuestion()
+      this.state = true;  
+  }
+
+  onSubmet() {
+
+    if(!this.answersCorrect){  
+      this.isValidationInCorrect() 
+      return   
+    }
+    
+    this.isValidationCorrect()
   }
 
   ngOnInit(): void {
-    
     this.getListquestion();
   }
 
